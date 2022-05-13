@@ -1,0 +1,45 @@
+.app-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    &__item {
+        display: inline;
+        margin-left: .5rem;
+    }
+
+    &__link {
+        text-transform: uppercase;
+        text-decoration: none;
+        color: #FFFFFF;
+        padding: 1rem;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+        border-radius: 4px;
+
+        &:hover,
+        &:focus,
+        &--active {
+            background-color: rgba(0, 0, 0, .2);
+        }
+
+        &:focus {
+            outline: 4px solid rgba(255, 255, 255, .2);
+        }
+    }
+}
+
+@media only screen and(max-width: 600px) {
+    .app-menu {
+        margin-top: 1rem;
+
+        &__item {
+            margin-left: 0;
+        }
+
+        &__link {
+            margin-top: .5rem;
+            display: block;
+            width: 100%;
+        }
+    }
+}

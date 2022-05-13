@@ -1,0 +1,23 @@
+.app-header {
+    background-color: #333852;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__brand {
+        color: #FFFFFF;
+        margin: 0;
+        text-transform: uppercase;
+    }
+}
+
+@media only screen and(max-width: 600px) {
+    .app-header {
+        display: block;
+
+        &__brand {
+            text-align: center;
+        }
+    }
+}
