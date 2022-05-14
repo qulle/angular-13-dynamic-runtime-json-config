@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AppConfigService } from './core/services/app-config/app-config.service';
 
 @Component({
     selector: 'app-root',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
     title = 'angular-13-dynamic-runtime-json-config';
+
+    constructor(private appConfigService: AppConfigService) { }
+
+    isMenuVisible(): boolean {
+        return this.appConfigService.getBaseConfig().showMenu;
+    }
 }

@@ -1,5 +1,7 @@
 <app-header>
-    <app-menu></app-menu>
+    <ng-template [ngIf]="isMenuVisible()">
+        <app-menu></app-menu>
+    </ng-template>
 </app-header>
 <div class="app-wrapper">
     <router-outlet></router-outlet>
