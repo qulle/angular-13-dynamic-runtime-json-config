@@ -5,10 +5,12 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { appConfigFactory } from './core/services/app-config/app-config-factory';
 import { AppConfigService } from './core/services/app-config/app-config.service';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        ToastComponent
     ],
     imports: [
         BrowserModule,

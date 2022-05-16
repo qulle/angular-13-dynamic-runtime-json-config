@@ -3,6 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { AppConfigService } from './app/core/services/app-config/app-config.service';
+import { ToastService } from './app/shared/services/toast/toast.service';
 import { environment } from './environments/environment';
 
 if (environment.production) {
@@ -11,7 +12,7 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(AppModule)
     .then(app => {
-        const appConfigService = app.injector.get(AppConfigService);
+        const appConfigService: AppConfigService = app.injector.get(AppConfigService);
         
         if(appConfigService.getBaseConfig().disableSelections) {
             document.body.classList.add('app-disable-selections');
@@ -24,6 +25,9 @@ platformBrowserDynamic().bootstrapModule(AppModule)
         if(appConfigService.getBaseConfig().disableContextmenu) {
             document.body.classList.add('app-disable-contextmenu');
         }
+
+        const toastService: ToastService = app.injector.get(ToastService);
+        toastService.createToast('Application has loaded');
     })
     .catch(err => console.error(err));
 

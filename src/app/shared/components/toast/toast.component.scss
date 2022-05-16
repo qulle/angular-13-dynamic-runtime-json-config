@@ -1,0 +1,33 @@
+.app-toast {
+    cursor: pointer;
+    padding: .75rem .875rem;
+    border-radius: 4px;
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, .2);
+    margin: 0 1rem 1rem 1rem;
+    display: flex;
+    align-items: center;
+
+    &__message {
+        color: #FFFFFF;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+    }
+
+    &--info {
+        background-color: #3B4352;
+    }
+
+    &--warning {
+        background-color: #FCBE80;
+    }
+
+    &--error {
+        background-color: #E96B69;
+    }
+
+    &--success {
+        background-color: #3CAEA3;
+    }
+}

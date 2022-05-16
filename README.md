@@ -1,15 +1,15 @@
 # Angular 13 Dynamic Runtime JSON Config
 
 ## About
-This repo is not intended as a full reference for how to build good structures in an Angular application. This is the bare minimum MVP for showing three concepts. The concepts are how to:
+The purpose of this repo is to be concise and only touch on the three topics mentioned in the bullet list below. It is not a complete guide to how a good Angular project should be structured. The topics covered are the following, how to:
 
 1. use lazy-loaded-modules in the router. 
 
 2. load runtime application configuration from JSON/API endpoints at application startup. 
 
-3. create a Toast Service that with one-line-of-code dynamically can create toast messages at any state of the application.
+3. create a global Toast Service that with one-line-of-code dynamically can create toast messages at any state of the application.
 
-## 1. ROUTING
+## 1. Lazy loaded Routing
 Follow this list to set up routing with lazy-loading.
 
 1.1 Configure main router
@@ -115,7 +115,7 @@ import { AppRoutingModule } from '../app-routing.module';
 export class CoreModule { }
 ```
 
-## 2. APP_INITIALIZER
+## 2. Load JSON config using APP_INITIALIZER
 Follow this list to configure loading of JSON data using APP_INITIALIZER.
 
 2.1 Configure main module
@@ -163,7 +163,9 @@ export interface BaseConfig {
     disableZoom: boolean,
     disableContextmenu: boolean
 }
+```
 
+```typescript
 // File: base.default.ts
 import { BaseConfig } from '../models/base.config.model';
 
@@ -228,7 +230,7 @@ export class AppConfigService {
         return forkJoin([
             this.http.get(`${this.BASE_URI}/base.config.json?cache=${timestamp}`).pipe(
                 tap((baseConfig) => {
-                    // The spread operator is used to merge in changes in the config, otherwise it will use the default values. 
+                    // The spread operator is used to merge in changes in the config, it will fall back to use the default values in the application if no properties are specified. 
                     // This makes it possible to just specify the wanted parameters in the JSON-files and not the entire object.
                     this.baseConfig = { 
                         ...this.baseConfig, 
@@ -242,7 +244,7 @@ export class AppConfigService {
             ),
             this.http.get(`${this.BASE_URI}/movie-gallery.config.json?cache=${timestamp}`).pipe(
                 tap((movieGalleryConfig) => {
-                    // The spread operator is used to merge in changes in the config, otherwise it will use the default values. 
+                    // The spread operator is used to merge in changes in the config, it will fall back to use the default values in the application if no properties are specified.
                     // This makes it possible to just specify the wanted parameters in the JSON-files and not the entire object.
                     this.movieGalleryConfig = { 
                         ...this.movieGalleryConfig, 
@@ -310,7 +312,9 @@ The data from the JSON-file can now be used in the HTML-template.
     <h1 class="app-header__brand">Movies</h1>
     <ng-content></ng-content>
 </div>
+```
 
+```html
 <!-- File: app.component.html -->
 <app-header>
     <ng-template [ngIf]="isMenuVisible()">
@@ -406,4 +410,231 @@ document.addEventListener('contextmenu', function(event) {
 });
 ```
 
-## 3. TOAST SERVICE
+## 3. Global Toast Service
+Follow this list to implement the Toast Service.
+
+3.1 Create the Toast Service
+```typescript
+// File: toast.sercice.ts
+import { Injectable, ViewContainerRef } from '@angular/core';
+import { ToastComponent } from '../../components/toast/toast.component';
+
+export enum ToastTypes {
+    Success = 'app-toast--success',
+    Info = 'app-toast--info',
+    Warning = 'app-toast--warning',
+    Error = 'app-toast--error'
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ToastService {
+    private toastViewContainerRef!: ViewContainerRef;
+    private toastQueue: Array<{
+        message: string,
+        type: ToastTypes
+    }> = [];
+
+    constructor() { }
+
+    setViewContainerRef(viewContainerRef: ViewContainerRef): void {
+        this.toastViewContainerRef = viewContainerRef;
+    }
+
+    handleQueue(): void {
+        this.toastQueue.forEach(toast => {
+            this.createToast(toast.message, toast.type);
+        });
+    }
+
+    createToast(message: string, type: ToastTypes = ToastTypes.Info): void {
+        if(!this.toastViewContainerRef) {
+            this.toastQueue.push({message, type});
+            return;
+        }
+
+        const componentRef = this.toastViewContainerRef.createComponent(ToastComponent);
+        componentRef.instance.message = message;
+        componentRef.instance.type = type;
+        componentRef.instance.ref = this.toastViewContainerRef;
+    }
+}
+```
+
+3.2 Create the Toast Component
+```html
+<!-- File: toast.component.html -->
+<div class="app-toast {{type}}" (click)="deleteToast()">
+    <p class="app-toast__message">{{message}}</p>
+</div>
+```
+
+```scss
+/* File: toast.component.scss */
+.app-toast {
+    cursor: pointer;
+    padding: .75rem .875rem;
+    border-radius: 4px;
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, .2);
+    margin: 0 1rem 1rem 1rem;
+    display: flex;
+    align-items: center;
+
+    &__message {
+        color: #FFFFFF;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+    }
+
+    &--info {
+        background-color: #3B4352;
+    }
+
+    &--warning {
+        background-color: #FCBE80;
+    }
+
+    &--error {
+        background-color: #E96B69;
+    }
+
+    &--success {
+        background-color: #3CAEA3;
+    }
+}
+```
+
+```typescript
+// File: toast.component.ts
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { ToastTypes } from '../../services/toast/toast.service';
+
+@Component({
+    selector: 'app-toast',
+    templateUrl: './toast.component.html',
+    styleUrls: ['./toast.component.scss']
+})
+export class ToastComponent implements OnInit {
+    message: string;
+    type: string;
+    ref!: ViewContainerRef;
+
+    constructor() {
+        this.message = 'Default toast message';
+        this.type = ToastTypes.Info;
+    }
+
+    ngOnInit(): void { }
+
+    deleteToast(): void {
+        this.ref.detach();
+    }
+}
+```
+
+Declare the ToastComponent in the AppModule.
+```typescript
+// File: app.module.ts
+import { ToastComponent } from './shared/components/toast/toast.component';
+
+@NgModule({
+        ToastComponent
+    ],
+})
+export class AppModule { }
+```
+
+3.3 Modify App Component
+```html
+<!-- File: app.component.html -->
+<app-header>
+    <ng-template [ngIf]="isMenuVisible()">
+        <app-menu></app-menu>
+    </ng-template>
+</app-header>
+<div class="app-wrapper">
+    <router-outlet></router-outlet>
+</div>
+<div id="app-toast-container">
+    <ng-container #appToastContainer></ng-container>
+</div>
+```
+
+```typescript
+// File: app.component.ts
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { AppConfigService } from './core/services/app-config/app-config.service';
+import { ToastService } from './shared/services/toast/toast.service';
+
+@Component({
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements AfterViewInit {
+    title = 'angular-13-dynamic-runtime-json-config';
+    
+    // This will get a reference to the toast-container
+    @ViewChild('appToastContainer', {
+        read: ViewContainerRef
+    }) viewContainerRef!: ViewContainerRef;
+
+    constructor(
+        private appConfigService: AppConfigService,
+        private toastService: ToastService,
+        private changeDetectorRef: ChangeDetectorRef
+    ) { }
+
+    ngAfterViewInit(): void {
+        // Add the element reference to the service
+        this.toastService.setViewContainerRef(this.viewContainerRef);
+
+        // Empty toast-queue that was generated during application initialization
+        this.toastService.handleQueue();
+
+        // Important to re-evaluate the component change-detection
+        // This is done because of Error: NG100: ExpressionChangedAfterItHasBeenCheckedError
+        this.changeDetectorRef.detectChanges();
+    }
+
+    isMenuVisible(): boolean {
+        return this.appConfigService.getBaseConfig().showMenu;
+    }
+}
+```
+
+3.4 Inject the ToastService to make a toast
+```typescript
+// File: main.ts
+platformBrowserDynamic().bootstrapModule(AppModule)
+    .then(app => {
+        // Instantiate a toast message using default type = Info
+        const toastService: ToastService = app.injector.get(ToastService);
+        toastService.createToast('Application has loaded');
+    })
+    .catch(err => console.error(err));
+```
+
+```typescript
+// File: app-config.service.ts
+this.http.get(`${this.BASE_URI}/base.config.json?cache=${timestamp}`).pipe(
+    tap((baseConfig) => {
+        this.baseConfig = { 
+            ...this.baseConfig, 
+            ...(<BaseConfig>baseConfig || {}) 
+        };
+    }),
+    catchError((error) => {
+        console.warn('Error in app-config.service http.get base.config.json');
+        // Instantiate a toast message
+        this.toastService.createToast(
+            'Error loading base.config.json',
+            ToastTypes.Error
+        );
+        return of(error)
+    })
+),
+```
