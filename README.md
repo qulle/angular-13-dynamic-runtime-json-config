@@ -1,16 +1,16 @@
 # Angular 13 Dynamic Runtime JSON Config
 
 ## About
-In this repository i describe how to: 
+This repo is not intended as a full reference for how to build good structures in an Angular application. This is the bare minimum MVP for showing three concepts. The concepts are how to:
 
-1. create a small application that uses lazy-loaded-modules in the router. 
+1. use lazy-loaded-modules in the router. 
 
-2. load application-settings from JSON/API endpoints without the need for re-deployment of the application. 
+2. load runtime application configuration from JSON/API endpoints at application startup. 
 
-3. create a Toast Service that with one line of code dynamically can create toast messages at any state of the application.
+3. create a Toast Service that with one-line-of-code dynamically can create toast messages at any state of the application.
 
 ## 1. ROUTING
-Follow this list to properly set up routing with lazy-loading.
+Follow this list to set up routing with lazy-loading.
 
 1.1 Configure main router
 ```typescript
@@ -20,18 +20,21 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
-        path: '',
-        redirectTo: '/movies',
-        pathMatch: 'full'
-    },
-    {
         path: 'movies',
-        loadChildren: () => import('./movie-gallery/movie-gallery.module').then(module => module.MovieGalleryModule)
+        loadChildren: () => import('./movie-gallery/movie-gallery.module')
+            .then(module => module.MovieGalleryModule)
+            .catch(error => console.error(error))
     },
     {
         path: 'administration',
-        loadChildren: () => import('./movie-administration/movie-administration.module').then(module => module.MovieAdministrationModule)
+        loadChildren: () => import('./movie-administration/movie-administration.module')
+            .then(module => module.MovieAdministrationModule)
+            .catch(error => console.error(error))
     },
+    {
+        path: '**',
+        redirectTo: '/movies'
+    }
 ];
 
 @NgModule({
@@ -93,7 +96,10 @@ export class MovieGalleryModule { }
 1.4 Lastly add routerLink to the menu
 ```html
 <!-- File: app-routing.module.ts -->
-<a routerLink="/administration" routerLinkActive="app-menu__link--active" class="app-menu__link">Administration</a>
+<a 
+    routerLink="/administration" 
+    routerLinkActive="app-menu__link--active" 
+    class="app-menu__link">Administration</a>
 ```
 
 Don't forget to import the main AppRoutingModule in module where the routerLink is placed or the link won't work, it will not generate any error so this can be tricky to find.
@@ -150,12 +156,12 @@ export class AppModule { }
 import { MetaConfig } from './meta.model';
 
 export interface BaseConfig {
-    "meta": Array<MetaConfig>,
-    "showMenu": boolean,
-    "headerBackgroundColor": string,
-    "disableSelections": boolean,
-    "disableZoom": boolean,
-    "disableContextmenu": boolean
+    meta: Array<MetaConfig>,
+    showMenu: boolean,
+    headerBackgroundColor: string,
+    disableSelections: boolean,
+    disableZoom: boolean,
+    disableContextmenu: boolean
 }
 
 // File: base.default.ts
@@ -224,7 +230,10 @@ export class AppConfigService {
                 tap((baseConfig) => {
                     // The spread operator is used to merge in changes in the config, otherwise it will use the default values. 
                     // This makes it possible to just specify the wanted parameters in the JSON-files and not the entire object.
-                    this.baseConfig = { ...this.baseConfig, ...(<BaseConfig>baseConfig || {}) };
+                    this.baseConfig = { 
+                        ...this.baseConfig, 
+                        ...(<BaseConfig>baseConfig || {}) 
+                    };
                 }),
                 catchError((error) => {
                     console.warn('Error in app-config.service http.get base.config.json');
@@ -235,7 +244,10 @@ export class AppConfigService {
                 tap((movieGalleryConfig) => {
                     // The spread operator is used to merge in changes in the config, otherwise it will use the default values. 
                     // This makes it possible to just specify the wanted parameters in the JSON-files and not the entire object.
-                    this.movieGalleryConfig = { ...this.movieGalleryConfig, ...(<MovieGalleryConfig>movieGalleryConfig || {}) };
+                    this.movieGalleryConfig = { 
+                        ...this.movieGalleryConfig, 
+                        ...(<MovieGalleryConfig>movieGalleryConfig || {}) 
+                    };
                 }),
                 catchError((error) => {
                     console.warn('Error in app-config.service http.get movie-gallery.config.json');
@@ -257,6 +269,7 @@ export class AppConfigService {
 
 Don't forget to import the HttpClientModule in the closest module where the `AppConfigService` is placed or the dependency injected httpClient won't work.
 ```typescript
+// File: core.module.ts
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -356,7 +369,41 @@ document.addEventListener('touchstart', function(event) {
     passive: false
 });
 
-// For the full example see main.ts
+document.addEventListener('keydown', function(event) {
+    if((event.ctrlKey || event.metaKey) && (
+        event.key === '=' ||
+        event.key === '+' ||
+        event.key === '-' ||
+        event.key === 'AudioVolumeMute'
+    )) {
+        if(document.body.classList.contains('app-disable-zoom')) {
+            event.preventDefault();
+        }
+    }
+}, {
+    passive: false
+});
+
+document.addEventListener('wheel', function(event) {
+    if(event.ctrlKey) {
+        if(document.body.classList.contains('app-disable-zoom')) {
+            event.preventDefault();
+        }
+    }
+}, {
+    passive: false
+});
+
+/*
+    Disable contextmenu
+*/
+document.addEventListener('contextmenu', function(event) {
+    if(document.body.classList.contains('app-disable-contextmenu')) {
+        event.preventDefault();
+    }
+}, {
+    passive: false
+});
 ```
 
 ## 3. TOAST SERVICE

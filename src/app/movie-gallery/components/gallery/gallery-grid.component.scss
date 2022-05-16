@@ -1,0 +1,34 @@
+.app-movie-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 10px;
+
+    &__item {
+        background-color: #F2F2F2;
+        padding: 1rem;
+        border-radius: 4px;
+
+        &:hover {
+            background-color: #D7E3FA;
+        }
+    }
+
+    &__item-justify {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__title,
+    &__genre,
+    &__rating,
+    &__year {
+        margin: 0 0 .5rem 0;
+    }
+
+    &__genre,
+    &__rating,
+    &__year {
+        font-weight: normal;
+    }
+}

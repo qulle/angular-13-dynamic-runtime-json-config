@@ -1,10 +1,10 @@
 {
     "meta": {
-        "about": "This JSON-file controls the general Base configuration for the application",
+        "about": "This JSON-file controls the Movie Gallery configuration for the application",
         "version": "1.0.0",
         "date": "2022-05-14 12:00:00",
         "author": "Qulle"
     },
     "api": "//cdn.my-domain.com/api/v1/movies",
-    "type": "grid"
+    "type": "list"
 }

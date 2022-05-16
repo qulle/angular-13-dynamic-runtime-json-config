@@ -3,17 +3,20 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
-        path: '',
-        redirectTo: '/movies',
-        pathMatch: 'full'
-    },
-    {
         path: 'movies',
-        loadChildren: () => import('./movie-gallery/movie-gallery.module').then(module => module.MovieGalleryModule)
+        loadChildren: () => import('./movie-gallery/movie-gallery.module')
+            .then(module => module.MovieGalleryModule)
+            .catch(error => console.error(error))
     },
     {
         path: 'administration',
-        loadChildren: () => import('./movie-administration/movie-administration.module').then(module => module.MovieAdministrationModule)
+        loadChildren: () => import('./movie-administration/movie-administration.module')
+            .then(module => module.MovieAdministrationModule)
+            .catch(error => console.error(error))
+    },
+    {
+        path: '**',
+        redirectTo: '/movies'
     },
 ];
 

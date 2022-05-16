@@ -6,6 +6,7 @@ html,
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
+    overscroll-behavior: none;
 }
 
 body.app-disable-selections * {

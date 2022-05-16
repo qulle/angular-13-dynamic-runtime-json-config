@@ -33,7 +33,10 @@ export class AppConfigService {
         return forkJoin([
             this.http.get(`${this.BASE_URI}/base.config.json?cache=${timestamp}`).pipe(
                 tap((baseConfig) => {
-                    this.baseConfig = { ...this.baseConfig, ...(<BaseConfig>baseConfig || {}) };
+                    this.baseConfig = { 
+                        ...this.baseConfig, 
+                        ...(<BaseConfig>baseConfig || {}) 
+                    };
                 }),
                 catchError((error) => {
                     console.warn('Error in app-config.service http.get base.config.json');
@@ -42,7 +45,10 @@ export class AppConfigService {
             ),
             this.http.get(`${this.BASE_URI}/movie-gallery.config.json?cache=${timestamp}`).pipe(
                 tap((movieGalleryConfig) => {
-                    this.movieGalleryConfig = { ...this.movieGalleryConfig, ...(<MovieGalleryConfig>movieGalleryConfig || {}) };
+                    this.movieGalleryConfig = { 
+                        ...this.movieGalleryConfig, 
+                        ...(<MovieGalleryConfig>movieGalleryConfig || {}) 
+                    };
                 }),
                 catchError((error) => {
                     console.warn('Error in app-config.service http.get movie-gallery.config.json');

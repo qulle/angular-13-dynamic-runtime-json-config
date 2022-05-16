@@ -1,0 +1,26 @@
+.app-movie-list {
+    margin-top: 1rem;
+    border-collapse: collapse;
+    width: 100%;
+
+    tr:nth-child(even) {
+        background-color: #F2F2F2;
+    }
+
+    tr:hover {
+        background-color: #D7E3FA;
+    }
+
+    th,
+    td {
+        border: 1px solid #DDDDDD;
+        padding: .5rem; 
+    }
+
+    th {
+        padding: 1rem .5rem;
+        text-align: left;
+        background-color: #959DAD;
+        color: #FFFFFF;
+    }
+}

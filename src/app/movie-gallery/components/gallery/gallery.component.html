@@ -1,0 +1,34 @@
+<ng-template [ngIf]="isListLayout()">
+    <table class="app-movie-list">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Rating</th>
+                <th>Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let movie of movies">
+                <td>{{movie.title}}</td>
+                <td>{{movie.genre}}</td>
+                <td>{{movie.rating}}</td>
+                <td>{{movie.year}}</td>
+            </tr>
+        </tbody>
+    </table>
+</ng-template>
+
+<ng-template [ngIf]="isGridLayout()">
+    <div class="app-movie-grid">
+        <div class="app-movie-grid__item" *ngFor="let movie of movies">
+            <div class="app-movie-grid__item-justify">
+                <h4 class="app-movie-grid__title">{{movie.title}}</h4>
+                <h5 class="app-movie-grid__rating">{{movie.rating}}</h5>
+            </div>
+            
+            <h5 class="app-movie-grid__genre">{{movie.genre}}</h5>
+            <h5 class="app-movie-grid__year">Year {{movie.year}}</h5>
+        </div>
+    </div>
+</ng-template>
