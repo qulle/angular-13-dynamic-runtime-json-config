@@ -9,6 +9,36 @@ The purpose of this repo is to be concise and only touch on the three topics men
 
 3. create a global Toast Service that with one-line-of-code dynamically can create toast messages at any state of the application.
 
+## Get started
+1. Clone the repo
+```
+$ git clone https://github.com/qulle/angular-13-dynamic-runtime-json-config.git
+```
+
+2. Start the dev server
+```
+$ npm start
+```
+
+3. Build the application
+```
+$ npm run build
+```
+
+Development environment used:
+- Node Version: 16.14.2
+- NPM Version: 8.7.0 
+- Angular CLI Version: 13.3.5
+
+## Screenshots
+Examples of how the application can be configured at runtime using only the JSON-files.
+
+### Config A - Visible menu, list view and gray background.
+![Config A](images/config-a.png?raw=true "Config A")
+
+### Config B - Hidden menu, grid view and blue background.
+![Config B](images/config-b.png?raw=true "Config B")
+
 ## 1. Lazy loaded Routing
 Follow this list to set up routing with lazy-loading.
 
@@ -638,3 +668,6 @@ this.http.get(`${this.BASE_URI}/base.config.json?cache=${timestamp}`).pipe(
     })
 ),
 ```
+
+## Author
+[Qulle](https://github.com/qulle/)
