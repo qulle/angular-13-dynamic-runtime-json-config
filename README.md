@@ -100,7 +100,7 @@ const routes: Routes = [
 export class MovieGalleryRoutingModule { }
 ```
 
-1.3 Register each route-module in its sibling module.
+1.3 Register each route-module in its sibling module
 ```typescript
 // File: app-routing.module.ts
 import { AppRoutingModule } from './app-routing.module';
@@ -441,7 +441,7 @@ document.addEventListener('contextmenu', function(event) {
 ```
 
 ## 3. Global Toast Service
-Follow this list to implement the Toast Service.
+Follow this list to implement the ToastService.
 
 3.1 Create the Toast Service
 ```typescript
@@ -492,7 +492,7 @@ export class ToastService {
 }
 ```
 
-3.2 Create the Toast Component
+3.2 Create the ToastComponent
 ```html
 <!-- File: toast.component.html -->
 <div class="app-toast {{type}}" (click)="deleteToast()">
@@ -577,7 +577,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
 export class AppModule { }
 ```
 
-3.3 Modify App Component
+3.3 Modify AppComponent
 ```html
 <!-- File: app.component.html -->
 <app-header>
