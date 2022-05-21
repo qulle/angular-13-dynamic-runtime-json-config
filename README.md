@@ -33,11 +33,53 @@ Development environment used:
 ## Screenshots
 Examples of how the application can be configured at runtime using only the JSON-files.
 
-### Config A - Visible menu, list view and gray background.
+### Config A
+- Visible menu
+- List view 
+- Gray header
+
 ![Config A](images/config-a.png?raw=true "Config A")
 
-### Config B - Hidden menu, grid view and blue background.
+### Config B
+- Hidden menu
+- Grid view 
+- Blue header
+
 ![Config B](images/config-b.png?raw=true "Config B")
+
+## JSON Configuration files
+Examples of JSON-files that controls the UI and functionality in the application.
+
+File: base.config.json
+```json
+{
+    "meta": {
+        "about": "This JSON-file controls the general Base configuration for the application",
+        "version": "1.0.0",
+        "date": "2022-05-14 12:00:00",
+        "author": "Qulle"
+    },
+    "showMenu": true,
+    "headerBackgroundColor": "#333852",
+    "disableSelections": true,
+    "disableZoom": true,
+    "disableContextmenu": true
+}
+```
+
+File: movie-gallery.config.json
+```json
+{
+    "meta": {
+        "about": "This JSON-file controls the Movie Gallery configuration for the application",
+        "version": "1.0.0",
+        "date": "2022-05-14 12:00:00",
+        "author": "Qulle"
+    },
+    "api": "//cdn.my-domain.com/api/v1/movies",
+    "type": "list"
+}
+```
 
 ## 1. Lazy loaded Routing
 Follow this list to set up routing with lazy-loading.
@@ -89,7 +131,10 @@ import { IndexComponent } from './layout/index/index.component';
 // I like to route to different layouts that then have different combinations of individual re-usable components. 
 // The IndexComponent is the default route in any of my routable-modules.
 const routes: Routes = [
-    { path: '', component: IndexComponent }
+    { 
+        path: '', 
+        component: IndexComponent 
+    }
 ];
 
 @NgModule({
@@ -186,7 +231,7 @@ export class AppModule { }
 import { MetaConfig } from './meta.model';
 
 export interface BaseConfig {
-    meta: Array<MetaConfig>,
+    meta: MetaConfig,
     showMenu: boolean,
     headerBackgroundColor: string,
     disableSelections: boolean,
@@ -200,7 +245,12 @@ export interface BaseConfig {
 import { BaseConfig } from '../models/base.config.model';
 
 export const BaseConfigDefault = <BaseConfig> {
-    meta: [],
+    meta: {
+        about: 'This JSON-file controls the general Base configuration for the application',
+        version: '1.0.0',
+        date: '2022-05-14 12:00:00',
+        author: 'Qulle'
+    },
     showMenu: true,
     headerBackgroundColor: '#333852',
     disableSelections: false,
