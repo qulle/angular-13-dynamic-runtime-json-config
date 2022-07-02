@@ -1,7 +1,7 @@
 # Angular 13 Dynamic Runtime JSON Config
 
 ## About
-The purpose of this repo is to be concise and only touch on the three topics mentioned in the bullet list below. It is not a complete guide to how a good Angular project should be structured. The topics covered are the following, how to:
+The purpose of this project is to document the installation, configuration and integration process of the following concepts. How to:
 
 1. use lazy-loaded-modules in the router. 
 
