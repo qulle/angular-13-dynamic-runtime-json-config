@@ -3,11 +3,11 @@
 ## About
 The purpose of this project is to document the installation, configuration and integration process of the following concepts. How to:
 
-1. use lazy-loaded-modules in the router. 
+### 1. [Routing Lazy Loaded Modules](#1-lazy-loaded-modules)
 
-2. load runtime application configuration from JSON/API endpoints at application startup. 
+### 2. [JSON Runtime Config](#2-load-json-runtime-config)
 
-3. create a global Toast Service that with one-line-of-code dynamically can create toast messages at any state of the application.
+### 3. [Toast Service](#3-global-toast-service)
 
 ## Get started
 1. Clone the repo
@@ -81,10 +81,10 @@ File: movie-gallery.config.json
 }
 ```
 
-## 1. Lazy loaded Routing
+## 1. Lazy Loaded Modules
 Follow this list to set up routing with lazy-loading.
 
-1.1 Configure main router
+### 1.1 Configure main router
 ```typescript
 // File: app-routing.module.ts
 import { NgModule } from '@angular/core';
@@ -121,7 +121,7 @@ const routes: Routes = [
 export class AppRoutingModule { }
 ```
 
-1.2 Configure child routers
+### 1.2 Configure child routers
 ```typescript
 // File: movie-gallery-routing.module.ts
 import { NgModule } from '@angular/core';
@@ -145,7 +145,7 @@ const routes: Routes = [
 export class MovieGalleryRoutingModule { }
 ```
 
-1.3 Register each route-module in its sibling module
+### 1.3 Register each route-module in its sibling module
 ```typescript
 // File: app-routing.module.ts
 import { AppRoutingModule } from './app-routing.module';
@@ -168,7 +168,7 @@ import { MovieGalleryRoutingModule } from './movie-gallery-routing.module';
 export class MovieGalleryModule { }
 ```
 
-1.4 Lastly add routerLink to the menu
+### 1.4 Lastly add routerLink to the menu
 ```html
 <!-- File: app-routing.module.ts -->
 <a 
@@ -190,10 +190,10 @@ import { AppRoutingModule } from '../app-routing.module';
 export class CoreModule { }
 ```
 
-## 2. Load JSON config using APP_INITIALIZER
+## 2. Load JSON Runtime Config
 Follow this list to configure loading of JSON data using APP_INITIALIZER.
 
-2.1 Configure main module
+### 2.1 Configure main module
 ```typescript
 // File: app.module.ts
 import { APP_INITIALIZER, NgModule } from '@angular/core';
@@ -225,7 +225,7 @@ import { AppConfigService } from './core/services/app-config/app-config.service'
 export class AppModule { }
 ```
 
-2.2 Define models and default instances
+### 2.2 Define models and default instances
 ```typescript
 // File: base.config.model.ts
 import { MetaConfig } from './meta.model';
@@ -259,7 +259,7 @@ export const BaseConfigDefault = <BaseConfig> {
 }
 ```
 
-2.3 Add the appConfigFactory function
+### 2.3 Add the appConfigFactory function
 ```typescript
 // File: app-config-factory.ts
 import { Observable } from 'rxjs';
@@ -270,7 +270,7 @@ export const appConfigFactory = (appConfigService: AppConfigService): (() => Obs
 };
 ```
 
-2.4 Create the AppConfigService
+### 2.4 Create the AppConfigService
 ```typescript
 // File: app-config-service.ts
 import { HttpClient } from '@angular/common/http';
@@ -362,7 +362,7 @@ import { HttpClientModule } from '@angular/common/http';
 export class CoreModule { }
 ```
 
-2.5 Inject the AppConfigService in the components
+### 2.5 Inject the AppConfigService in the components
 ```typescript
 // File: header.component.ts
 import { Component, OnInit } from '@angular/core';
@@ -406,7 +406,7 @@ The data from the JSON-file can now be used in the HTML-template.
 </div>
 ```
 
-2.6 Inject the AppConfigService in main.ts
+### 2.6 Inject the AppConfigService in main.ts
 ```typescript
 // File: main.ts
 import { enableProdMode } from '@angular/core';
@@ -493,7 +493,7 @@ document.addEventListener('contextmenu', function(event) {
 ## 3. Global Toast Service
 Follow this list to implement the ToastService.
 
-3.1 Create the Toast Service
+### 3.1 Create the Toast Service
 ```typescript
 // File: toast.sercice.ts
 import { Injectable, ViewContainerRef } from '@angular/core';
@@ -542,7 +542,7 @@ export class ToastService {
 }
 ```
 
-3.2 Create the ToastComponent
+### 3.2 Create the ToastComponent
 ```html
 <!-- File: toast.component.html -->
 <div class="app-toast {{type}}" (click)="deleteToast()">
@@ -627,7 +627,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
 export class AppModule { }
 ```
 
-3.3 Modify AppComponent
+### 3.3 Modify AppComponent
 ```html
 <!-- File: app.component.html -->
 <app-header>
@@ -686,7 +686,7 @@ export class AppComponent implements AfterViewInit {
 }
 ```
 
-3.4 Inject the ToastService to make a toast
+### 3.4 Inject the ToastService to make a toast
 ```typescript
 // File: main.ts
 platformBrowserDynamic().bootstrapModule(AppModule)
